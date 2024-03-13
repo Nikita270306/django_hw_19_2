@@ -1,9 +1,13 @@
-
+from catalog.models import Product
 from django.shortcuts import render
 
 
 def index(request):
-    return render(request, 'catalog/index.html')
+    products = Product.objects.all()
+    context = {
+        "products": products
+    }
+    return render(request, 'catalog/home.html', context)
 
 
 def home(request):
