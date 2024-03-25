@@ -1,0 +1,24 @@
+{% extends "catalog/base.html" %}
+{%  load filters %}
+
+{% block content %}
+  <div class="container">
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card mb-4 box-shadow">
+              <img src="{{ product.image|mymedia }}" alt="Image description">
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">{{ product.description|truncatechars:100 }}</p>
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li><b>Цена:</b> {{ product.price_per_unit }}</li>
+                        <li><b>Категория:</b> {{ product.category }}</li>
+                        <li><b>Дата создания:</b> {{ product.created_at }}</li>
+                    </ul>
+                    <button type="button" class="btn btn-primary btn-block">Купить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
