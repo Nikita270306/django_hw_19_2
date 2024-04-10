@@ -1,29 +1,33 @@
 {% extends 'catalog/base.html' %}
-
-{% block content %}
 {% load mediapath_tag %}
 
-<div class="container">
-    <div class="row featurette">
-        <div class="col-md-7">
-            <h2>{{ post.title }}</h2>
-            <p class="lead">{{ post.content }}</p>
+{% block content %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-4 d-flex align-items-center justify-content-center">
+            <img src="{% mediapath post.image %}" class="img-fluid rounded-start" style="height: 300px;" alt="Post Image">
         </div>
-        <div class="col-md-5">
-            <img width="350" height="300" class="featurette-image img-fluid mx-auto" src="{{ post.image }}">
+    </div>
+    <div class="row justify-content-center mt-3">
+        <div class="col-md-8">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h2 class="card-title">{{ post.title }}</h2>
+                    <p class="card-text">{{ post.slug }}</p>
+                    <p class="card-text">{{ post.content }}</p>
+                    <p class="card-text"><small class="text-muted">{{ post.created_at }}</small></p>
+                    <p class="card-text">Просмотры: {{ post.views_count }}</p>
+                </div>
+                <div class="col-md-4 d-flex align-items-center justify-content-center mb-4">
+                    <a href="{% url 'blog:blog_post_confirm_delete' post.pk %}" class="btn btn-lg btn-block btn-primary btn-hover-effect">Удалить</a>
+                </div>
+                <div class="col-md-4 d-flex align-items-center justify-content-center mb-4">
+                    <a href="{% url 'blog:blog_update' post.pk %}" class="btn btn-lg btn-block btn-success btn-hover-effect">Изменить</a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-<div>
-    <a href="{% url 'blog:blog_post_list' %}" class="btn btn-secondary my-3"
-       style="background: #0062cc">Назад</a>
 
-    {% if perms.blog.change_post %}
-    <a href="{% url 'blog:blog_update' post.pk %}" class="btn btn-secondary my-3"
-       style="background: green">Изменить</a>
-    <a href="{% url 'blog:blog_confirm_delete' post.pk %}" class="btn btn-secondary my-3"
-       style="background: red">Удалить</a>
-    {% endif %}
-
-</div>
 {% endblock %}
