@@ -9,8 +9,12 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import os
 from pathlib import Path
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -78,9 +82,10 @@ WSGI_APPLICATION = 'django_hw_19_2.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'djangodb',
-        'USER': 'postgres',
-        'PASSWORD': '123456',
+        'NAME': os.getenv("NAME_POSTGRES"),
+        'USER': os.getenv("USER_POSTGRES"),
+        'PASSWORD': os.getenv("USER_PASSWORD_POSTGRES"),
+        'HOST': '127.0.0.1',
     }
 }
 
