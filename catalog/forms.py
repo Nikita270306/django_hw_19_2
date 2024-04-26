@@ -83,7 +83,7 @@ class VersionCreateForm(ModelForm):
         self.fields['version_number'].widget.attrs.update({'placeholder': 'Enter number'})
         self.fields['current_version'].widget.attrs.update({'placeholder': 'Choose version'})
 
-        
+
 class VersionUpdateForm(ModelForm):
     class Meta:
         model = Version
