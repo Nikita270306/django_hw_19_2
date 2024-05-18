@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "catalog",
     "blog",
+    "user",
 ]
 
 MIDDLEWARE = [
@@ -92,6 +93,8 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
+AUTH_USER_MODEL = 'user.CustomUser'
+LOGIN_REDIRECT_URL = 'catalog:home'
 
 AUTH_PASSWORD_VALIDATORS = [
     {

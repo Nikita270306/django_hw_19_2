@@ -1,7 +1,9 @@
-from django.forms import inlineformset_factory
+from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 from catalog.forms import ProductCreateForm, ProductUpdateForm, VersionCreateForm, VersionUpdateForm
 from catalog.models import Product, Version
@@ -30,12 +32,15 @@ class ProductListView(ListView):
         return context
 
 
+@method_decorator(login_required(login_url=reverse_lazy('user:login')), name='dispatch')
 class ProductDetailView(DetailView):
     model = Product
     template_name = 'catalog/product_detail.html'
     context_object_name = 'product'
 
 
+@method_decorator(login_required(login_url=reverse_lazy('user:login')), name='dispatch')
+@method_decorator(csrf_exempt, name='dispatch')
 class ProductCreateView(CreateView):
     model = Product
     form_class = ProductCreateForm
@@ -67,6 +72,7 @@ class ProductCreateView(CreateView):
         return super().form_valid(form)
 
 
+@method_decorator(login_required(login_url=reverse_lazy('user:login')), name='dispatch')
 class ProductUpdateView(UpdateView):
     model = Product
     form_class = ProductUpdateForm
@@ -97,10 +103,12 @@ class ProductUpdateView(UpdateView):
         return reverse_lazy('catalog:product-detail', kwargs={'pk': self.object.pk})
 
 
+@method_decorator(login_required(login_url=reverse_lazy('user:login')), name='dispatch')
 class ContactDetailView(TemplateView):
     template_name = 'catalog/contacts.html'
 
 
+@method_decorator(login_required(login_url=reverse_lazy('user:login')), name='dispatch')
 class VersionDetailView(DetailView):
     model = Version
     template_name = 'catalog/version_detail.html'
@@ -111,6 +119,7 @@ class VersionDetailView(DetailView):
         return Version.objects.get(id=version_id)
 
 
+@method_decorator(login_required(login_url=reverse_lazy('user:login')), name='dispatch')
 class VersionCreateView(CreateView):
     model = Version
     form_class = VersionCreateForm
@@ -125,6 +134,7 @@ class VersionCreateView(CreateView):
         return reverse_lazy('catalog:home')
 
 
+@method_decorator(login_required(login_url=reverse_lazy('user:login')), name='dispatch')
 class VersionUpdateView(UpdateView):
     model = Version
     template_name = 'catalog/version_form.html'
