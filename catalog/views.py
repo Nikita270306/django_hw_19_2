@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
@@ -95,8 +96,8 @@ class ProductUpdateView(UpdateView):
 
     def get_object(self, queryset=None):
         self.object = super().get_object(queryset)
-        if self.object.owner != self.request.user and not self.request.user.is_staff:
-            raise Http404
+        if not self.request.user.has_perm('catalog.can_change_product'):
+            raise PermissionDenied("You do not have permission to edit this product")
         return self.object
 
     def get_success_url(self):

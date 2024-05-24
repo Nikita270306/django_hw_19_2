@@ -1,6 +1,8 @@
 from django.db import models
 from django.db.models import ForeignKey
 
+from user.models import CustomUser
+
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -23,6 +25,8 @@ class Product(models.Model):
     price_per_unit = models.IntegerField(verbose_name='цена за штуку')
     created_at = models.DateField(verbose_name='дата создания', auto_now_add=True)
     updated_at = models.DateField(verbose_name='дата последнего изменения', auto_now_add=True)
+    owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=None, related_name='products', verbose_name='Владелец')
+    is_published = models.BooleanField(default=False, verbose_name='опубликован')
 
     def __str__(self):
         return f'{self.name} {self.category} {self.price_per_unit}'
@@ -31,6 +35,11 @@ class Product(models.Model):
         verbose_name = 'продукт'
         verbose_name_plural = 'продукты'
         ordering = ('name',)
+        permissions = [
+            ('can_change_category', 'can_change_category'),
+            ('can_change_product', 'can_change_product'),
+            ('can_delete_product', 'can_delete_product')
+        ]
 
 
 class Version(models.Model):
