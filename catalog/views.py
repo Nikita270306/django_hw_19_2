@@ -4,12 +4,15 @@ from django.http import Http404
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
 from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_exempt
 
 from catalog.forms import ProductCreateForm, ProductUpdateForm, VersionCreateForm, VersionUpdateForm
 from catalog.models import Product, Version
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView, TemplateView, UpdateView, CreateView
+
+from catalog.services import get_cached_categories
 
 
 class ProductListView(ListView):
@@ -30,6 +33,7 @@ class ProductListView(ListView):
                 active_versions[product.pk] = active_version
 
         context['active_versions'] = active_versions
+        context['categories'] = get_cached_categories()
         return context
 
 
@@ -38,6 +42,17 @@ class ProductDetailView(DetailView):
     model = Product
     template_name = 'catalog/product_detail.html'
     context_object_name = 'product'
+
+    @cache_page(cache_page(60 * 15))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+
+        context_data['categories'] = get_cached_categories()
+
+        return context_data
 
 
 @method_decorator(login_required(login_url=reverse_lazy('user:login')), name='dispatch')
@@ -61,6 +76,7 @@ class ProductCreateView(CreateView):
                 active_versions[product.pk] = active_version
 
         context['active_versions'] = active_versions
+
         return context
 
     def form_valid(self, form):
